@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="countdown-prototype.client/countdown-prototype.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="Countdown-prototype.Server/Countdown-prototype.Server.csproj" />
+</Solution>

@@ -1,0 +1,2 @@
+C:\Users\rolan\OneDrive\Escritorio\DataRefresh\Countdown-prototype\countdown-prototype.client\obj\Release\countdown-prototype.client.esproj.CoreCompileInputs.cache
+C:\Users\rolan\OneDrive\Escritorio\Countdown-prototype\countdown-prototype.client\obj\Release\countdown-prototype.client.esproj.CoreCompileInputs.cache

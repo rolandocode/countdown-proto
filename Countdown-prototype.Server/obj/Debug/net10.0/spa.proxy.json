@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:59635",
+"RedirectUrl": "",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "C:\\Users\\rolan\\OneDrive\\Escritorio\\Countdown-prototype\\Countdown-prototype.Server\\..\\countdown-prototype.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}
