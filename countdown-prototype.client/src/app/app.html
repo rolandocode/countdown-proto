@@ -13,28 +13,48 @@
 
     html, body {
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       background-color: #f8fafc;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     .page {
-      display: grid;
-      place-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       min-height: 100vh;
       min-height: 100dvh;
       width: 100%;
-      padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
 
-    .card {
-      width: min(100%, 620px);
-      padding: clamp(24px, 5vw, 48px);
+    /* Mobile First Layout (1 per row) */
+    .cards-container {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* Desktop Layout (3 per row for >= 1024px) */
+    @media (min-width: 1024px) {
+      .cards-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .header-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .header-card {
+      padding: clamp(20px, 4vw, 32px);
       background: rgba(255, 255, 255, 0.95);
       border: 1px solid rgba(148, 163, 184, 0.2);
       border-radius: clamp(16px, 4vw, 24px);
-      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
       backdrop-filter: blur(12px);
       text-align: center;
     }
@@ -68,14 +88,19 @@
       font-size: clamp(13px, 3vw, 15px);
     }
 
-    .counter {
-      margin-top: clamp(24px, 5vw, 48px);
+    .card {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(24px, 3vw, 36px);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: clamp(16px, 4vw, 24px);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.04);
+      backdrop-filter: blur(12px);
+      text-align: center;
     }
-
-      .counter + .counter {
-        padding-top: clamp(24px, 5vw, 48px);
-        border-top: 1px solid #e2e8f0;
-      }
 
     .counter-title {
       font-size: 12px;
@@ -86,7 +111,7 @@
     }
 
     .percentage {
-      font-size: clamp(36px, 10vw, 72px);
+      font-size: clamp(32px, 4vw, 48px);
       line-height: 1;
       font-weight: 700;
       letter-spacing: -0.04em;
@@ -96,7 +121,7 @@
 
     .progress-container {
       height: 10px;
-      margin-top: clamp(20px, 4vw, 32px);
+      margin-top: clamp(20px, 4vw, 28px);
       overflow: hidden;
       background: #e2e8f0;
       border-radius: 999px;
@@ -114,10 +139,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-top: clamp(24px, 5vw, 40px);
-      padding-top: clamp(20px, 4vw, 28px);
+      margin-top: clamp(20px, 4vw, 28px);
+      padding-top: clamp(16px, 3vw, 24px);
       border-top: 1px solid #e2e8f0;
-      gap: 16px;
+      gap: 12px;
     }
 
     .date {
@@ -140,7 +165,7 @@
     }
 
     .value {
-      font-size: clamp(12px, 2.8vw, 14px);
+      font-size: clamp(12px, 2vw, 14px);
       font-weight: 500;
       color: #334155;
       word-break: break-word;
@@ -154,7 +179,7 @@
     }
 
     .footer {
-      margin-top: clamp(20px, 4vw, 32px);
+      margin-top: clamp(16px, 3vw, 24px);
       font-size: 13px;
       color: #94a3b8;
     }
@@ -180,130 +205,214 @@
 <body>
 
   <div class="page">
-    <main class="card">
+    <div class="cards-container">
 
-      <div class="header">
-        <span class="eyebrow">COUNTDOWN</span>
-        <h1>Countdown</h1>
-        <p>Progress between your selected dates.</p>
-      </div>
-
-
-
-
-      <!-- SECOND COUNTER -->
-      <div class="counter">
-
-        <div class="counter-title">
-          COUNTER DAY
+      <!-- HEADER CARD -->
+      <header class="header-card">
+        <div class="header">
+          <span class="eyebrow">COUNTDOWN</span>
+          <h1>Countdown Dashboard</h1>
+          <p>Progress metrics across active tracking endpoints.</p>
         </div>
+      </header>
 
-        <div class="percentage">
-          {{ counterApiResult.percentage?.toFixed(5) }}%
-        </div>
+      <!-- CARD 1: COUNTER DAY -->
+      <main class="card">
+        <div>
+          <div class="counter-title">
+            COUNTER DAY
+          </div>
 
-        <div class="progress-container">
-          <div class="progress-bar"
-               [style.width.%]="counterApiResult.percentage">
+          <div class="percentage">
+            {{ counterApiResult.percentage?.toFixed(5) }}%
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-bar"
+                 [style.width.%]="counterApiResult.percentage">
+            </div>
           </div>
         </div>
 
-        <div class="dates">
-          <div class="date">
-            <span class="label">START</span>
-            <span class="value">{{ counterApiResult.startDate }}</span>
+        <div>
+          <div class="dates">
+            <div class="date">
+              <span class="label">START</span>
+              <span class="value">{{ counterApiResult.startDate }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="date">
+              <span class="label">END</span>
+              <span class="value">{{ counterApiResult.endDate }}</span>
+            </div>
           </div>
 
-          <div class="divider"></div>
-
-          <div class="date">
-            <span class="label">END</span>
-            <span class="value">{{ counterApiResult.endDate }}</span>
+          <div class="footer">
+            {{ counterApiResult.percentage | number:'1.2-2' }}% completed
           </div>
         </div>
+      </main>
 
-        <div class="footer">
-          {{ counterApiResult.percentage | number:'1.2-2' }}% completed
-        </div>
-
-      </div>
-
-
-      <!-- THIRD COUNTER -->
-      <div class="counter">
-
-        <div class="counter-title">
-          WORK API
-        </div>
-
-        <div class="percentage">
-          {{ workResult.percentage?.toFixed(5) }}%
-        </div>
-
-        <div class="progress-container">
-          <div class="progress-bar"
-               [style.width.%]="workResult.percentage">
-          </div>
-        </div>
-
-        <div class="dates">
-          <div class="date">
-            <span class="label">START</span>
-            <span class="value">{{ workResult.startDate }}</span>
+      <!-- CARD 2: WORK API -->
+      <main class="card">
+        <div>
+          <div class="counter-title">
+            WORK API
           </div>
 
-          <div class="divider"></div>
+          <div class="percentage">
+            {{ workResult.percentage?.toFixed(5) }}%
+          </div>
 
-          <div class="date">
-            <span class="label">END</span>
-            <span class="value">{{ workResult.endDate }}</span>
+          <div class="progress-container">
+            <div class="progress-bar"
+                 [style.width.%]="workResult.percentage">
+            </div>
           </div>
         </div>
 
-        <div class="footer">
-          {{ workResult.percentage | number:'1.2-2' }}% completed
+        <div>
+          <div class="dates">
+            <div class="date">
+              <span class="label">START</span>
+              <span class="value">{{ workResult.startDate }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="date">
+              <span class="label">END</span>
+              <span class="value">{{ workResult.endDate }}</span>
+            </div>
+          </div>
+
+          <div class="footer">
+            {{ workResult.percentage | number:'1.2-2' }}% completed
+          </div>
         </div>
+      </main>
 
-      </div>
+      <!-- CARD 3: WEEKEND API -->
+      <main class="card">
+        <div>
+          <div class="counter-title">
+            WEEKEND API
+          </div>
 
-      <!-- FIRST COUNTER -->
-      <div class="counter">
+          <div class="percentage">
+            {{ weekendResult.percentage?.toFixed(5) }}%
+          </div>
 
-        <div class="counter-title">
-          COUNTER
-        </div>
-
-        <div class="percentage">
-          {{ counterResult.percentage?.toFixed(5) }}%
-        </div>
-
-        <div class="progress-container">
-          <div class="progress-bar"
-               [style.width.%]="counterResult.percentage">
+          <div class="progress-container">
+            <div class="progress-bar"
+                 [style.width.%]="weekendResult.percentage">
+            </div>
           </div>
         </div>
 
-        <div class="dates">
-          <div class="date">
-            <span class="label">START</span>
-            <span class="value">{{ counterResult.startDate }}</span>
+        <div>
+          <div class="dates">
+            <div class="date">
+              <span class="label">START</span>
+              <span class="value">{{ weekendResult.startDate }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="date">
+              <span class="label">END</span>
+              <span class="value">{{ weekendResult.endDate }}</span>
+            </div>
           </div>
 
-          <div class="divider"></div>
+          <div class="footer">
+            {{ weekendResult.percentage | number:'1.2-2' }}% completed
+          </div>
+        </div>
+      </main>
 
-          <div class="date">
-            <span class="label">END</span>
-            <span class="value">{{ counterResult.endDate }}</span>
+      <!-- CARD 5: GENERAL COUNTER -->
+      <main class="card">
+        <div>
+          <div class="counter-title">
+            TEST COUNTER
+          </div>
+
+          <div class="percentage">
+            {{ counterResult.percentage?.toFixed(5) }}%
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-bar"
+                 [style.width.%]="counterResult.percentage">
+            </div>
           </div>
         </div>
 
-        <div class="footer">
-          {{ counterResult.percentage | number:'1.2-2' }}% completed
+        <div>
+          <div class="dates">
+            <div class="date">
+              <span class="label">START</span>
+              <span class="value">{{ counterResult.startDate }}</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="date">
+              <span class="label">END</span>
+              <span class="value">{{ counterResult.endDate }}</span>
+            </div>
+          </div>
+
+          <div class="footer">
+            {{ counterResult.percentage | number:'1.2-2' }}% completed
+          </div>
+        </div>
+      </main>
+
+      <!-- CARD 4: YEAR COUNTER -->
+      <main class="card">
+        <div>
+          <div class="counter-title">
+            Whole Year API
+          </div>
+
+          <div class="percentage">
+            {{ yearResult.percentage?.toFixed(5) }}%
+          </div>
+
+          <div class="progress-container">
+            <div class="progress-bar"
+                 [style.width.%]="yearResult.percentage">
+            </div>
+          </div>
         </div>
 
-      </div>
+        <div>
+          <div class="dates">
+            <div class="date">
+              <span class="label">START</span>
+              <span class="value">{{ yearResult.startDate }}</span>
+            </div>
 
-    </main>
+            <div class="divider"></div>
+
+            <div class="date">
+              <span class="label">END</span>
+              <span class="value">{{ yearResult.endDate }}</span>
+            </div>
+          </div>
+
+          <div class="footer">
+            {{ yearResult.percentage | number:'1.2-2' }}% completed
+          </div>
+        </div>
+      </main>
+
+    </div>
   </div>
+
 </body>
 </html>

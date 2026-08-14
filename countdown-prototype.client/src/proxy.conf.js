@@ -9,7 +9,11 @@ const PROXY_CONFIG = [
       "/weatherforecast",
       "/counter",
       "/counter/day",
-      "/counter/week", 
+      "/counter/week",
+      "/counter/weekend",
+      "/counter/year", 
+
+
 
 
     ],

@@ -20,6 +20,9 @@ export class App implements OnInit, OnDestroy {
   public counterResult: any = {};
   public counterApiResult: any = {};
   public workResult: any = {};
+  public weekendResult: any = {};
+  public yearResult: any = {};
+
 
   private timerId?: number;
 
@@ -39,12 +42,16 @@ export class App implements OnInit, OnDestroy {
     forkJoin({
       counter: this.http.get('/counter'),
       counterApi: this.http.get('/counter/day'),
-      work: this.http.get('counter/work')
+      work: this.http.get('/counter/work'),
+      weekend: this.http.get('/counter/weekend'),
+      year: this.http.get('/counter/year')
     }).subscribe({
       next: (result) => {
         this.counterResult = result.counter;
         this.counterApiResult = result.counterApi;
         this.workResult = result.work;
+        this.weekendResult = result.weekend;
+        this.yearResult = result.year;
       },
       error: (error) => {
         console.error(error);
