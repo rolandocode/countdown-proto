@@ -9,5 +9,6 @@ import { Component, Input } from '@angular/core';
 export class Countdown {
 
   @Input() counterResult: any = {};
-  @Input() counterName : string = "";
+  @Input() counterName: string = "";
+  @Input() decimalPrecission: number = 6;
 }

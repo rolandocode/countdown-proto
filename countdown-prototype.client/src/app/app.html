@@ -64,14 +64,14 @@
         </div>
       </header>
 
-      <app-countdown [counterResult]="counterResult" [counterName]="'TEST GENERIC API'"></app-countdown>
-      <app-countdown [counterResult]="payrollResult" [counterName]="'PAYROLL API'"></app-countdown>
-      <app-countdown [counterResult]="counterApiResult" [counterName]="'DAY API'"></app-countdown>
-      <app-countdown [counterResult]="hourResult" [counterName]="'HOUR API'"></app-countdown>
-      <app-countdown [counterResult]="workResult" [counterName]="'WORK API'"></app-countdown>
-      <app-countdown [counterResult]="weekendResult" [counterName]="'WEEKEND API'"></app-countdown>
-      <app-countdown [counterResult]="monthResult" [counterName]="'MONTH API'"></app-countdown>
-      <app-countdown [counterResult]="yearResult" [counterName]="'WHOLE YEAR API'"></app-countdown>
+      <app-countdown [counterResult]="counterResult" [counterName]="'TEST GENERIC API'" [decimalPrecission]="5"></app-countdown>
+      <app-countdown [counterResult]="payrollResult" [counterName]="'PAYROLL API'" [decimalPrecission]="4"></app-countdown>
+      <app-countdown [counterResult]="counterApiResult" [counterName]="'DAY API'" [decimalPrecission]="3"></app-countdown>
+      <app-countdown [counterResult]="hourResult" [counterName]="'HOUR API'" [decimalPrecission]="1"></app-countdown>
+      <app-countdown [counterResult]="workResult" [counterName]="'WORK API'" [decimalPrecission]="3"></app-countdown>
+      <app-countdown [counterResult]="weekendResult" [counterName]="'WEEKEND API'" [decimalPrecission]="3" ></app-countdown>
+      <app-countdown [counterResult]="monthResult" [counterName]="'MONTH API'" [decimalPrecission]="4"></app-countdown>
+      <app-countdown [counterResult]="yearResult" [counterName]="'WHOLE YEAR API'" [decimalPrecission]="5"></app-countdown>
 
     </div>
   </div>

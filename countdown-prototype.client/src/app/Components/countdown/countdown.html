@@ -6,7 +6,7 @@
     </div>
 
     <div class="percentage">
-      {{ counterResult.percentage?.toFixed(5) }}%
+      {{ counterResult.percentage?.toFixed(decimalPrecission) }}%
     </div>
 
     <div class="progress-container">
@@ -39,7 +39,7 @@
     </div>
 
     <div class="footer">
-      {{ (100 - counterResult.percentage).toFixed(6) }}% remaining
+      {{ (100 - counterResult.percentage).toFixed(decimalPrecission) }}% remaining
     </div>
   </div>
 </main>
