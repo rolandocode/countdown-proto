@@ -22,6 +22,8 @@ export class App implements OnInit, OnDestroy {
   public workResult: any = {};
   public weekendResult: any = {};
   public yearResult: any = {};
+  public hourResult: any = {};
+
 
 
   private timerId?: number;
@@ -44,7 +46,8 @@ export class App implements OnInit, OnDestroy {
       counterApi: this.http.get('/counter/day'),
       work: this.http.get('/counter/work'),
       weekend: this.http.get('/counter/weekend'),
-      year: this.http.get('/counter/year')
+      year: this.http.get('/counter/year'),
+      hour: this.http.get('/counter/hour')
     }).subscribe({
       next: (result) => {
         this.counterResult = result.counter;
@@ -52,6 +55,7 @@ export class App implements OnInit, OnDestroy {
         this.workResult = result.work;
         this.weekendResult = result.weekend;
         this.yearResult = result.year;
+        this.hourResult = result.hour;
       },
       error: (error) => {
         console.error(error);

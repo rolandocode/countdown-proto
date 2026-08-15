@@ -105,10 +105,16 @@ namespace Countdown_prototype.Server.Controllers
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, 7, 0, 0);
-
             var endDate = startDate.AddHours(10);
 
 
+            if (now.DayOfWeek == DayOfWeek.Saturday || now.DayOfWeek == DayOfWeek.Sunday || (now.DayOfWeek == DayOfWeek.Friday && now.Hour >= 17))
+            {
+               var nextMonday = now.AddDays(((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7);
+                startDate = new DateTime(nextMonday.Year, nextMonday.Month, nextMonday.Day, 7, 0, 0);
+                endDate = startDate.AddHours(10);
+            }
+          
             var totalDuration = endDate - startDate;
             var elapsed = now - startDate;
 
@@ -118,7 +124,7 @@ namespace Countdown_prototype.Server.Controllers
 
             percentage = Math.Clamp(percentage, 0, 100);
 
-            if (now < startDate || now > endDate && (now.DayOfWeek == DayOfWeek.Saturday || now.DayOfWeek == DayOfWeek.Sunday))
+            if (now < startDate || now > endDate || (now.DayOfWeek == DayOfWeek.Saturday || now.DayOfWeek == DayOfWeek.Sunday))
             {
                 percentage = 0;
             }
@@ -231,6 +237,45 @@ namespace Countdown_prototype.Server.Controllers
             var startDate = new DateTime(now.Year, 1, 1, 0, 0, 0);
 
             var endDate = new DateTime(now.Year + 1, 1, 1, 0, 0, 0);
+
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage =
+                elapsed.TotalMilliseconds /
+                totalDuration.TotalMilliseconds * 100;
+
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage
+            };
+        }
+
+        [HttpGet]
+        [Route("hour")]
+        public object GetHour()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+               DateTime.UtcNow,
+               mexicoTimeZone
+           ).AddHours(-1);
+
+
+            var startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
+
+            var endDate = startDate.AddHours(1);
 
 
             var totalDuration = endDate - startDate;
