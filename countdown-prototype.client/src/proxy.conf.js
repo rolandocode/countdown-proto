@@ -12,8 +12,7 @@ const PROXY_CONFIG = [
       "/counter/week",
       "/counter/weekend",
       "/counter/year", 
-
-
+      "/counter/hour"
 
 
     ],

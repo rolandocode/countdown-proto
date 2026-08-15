@@ -1,0 +1,45 @@
+ <!-- CARD 1: COUNTER DAY -->
+<main class="card">
+  <div>
+    <div class="counter-title">
+      {{counterName}}
+    </div>
+
+    <div class="percentage">
+      {{ counterResult.percentage?.toFixed(5) }}%
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar"
+           [style.width.%]="counterResult.percentage">
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="dates">
+      <div class="date">
+        <span class="label">START</span>
+        <span class="value">{{ counterResult.startDate }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="date">
+        <span class="label">LAST UPDATED</span>
+        <span class="value">{{ counterResult.currentDate }}</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="date">
+        <span class="label">END</span>
+        <span class="value">{{ counterResult.endDate }}</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      {{ counterResult.percentage | number:'1.2-2' }}% completed
+    </div>
+  </div>
+</main>
