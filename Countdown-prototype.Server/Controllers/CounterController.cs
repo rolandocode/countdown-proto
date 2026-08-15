@@ -363,7 +363,7 @@ namespace Countdown_prototype.Server.Controllers
             else
             {
                 startDate = new DateTime(now.Year, now.Month, 15, 0, 0, 0);
-                endDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0).AddMonths(1);
+                endDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0).AddMonths(1).AddSeconds(-1);
             }
 
             var totalDuration = endDate - startDate;
