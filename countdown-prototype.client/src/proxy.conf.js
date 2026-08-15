@@ -11,9 +11,10 @@ const PROXY_CONFIG = [
       "/counter/day",
       "/counter/week",
       "/counter/weekend",
-      "/counter/year", 
-      "/counter/hour"
-
+      "/counter/year",
+      "/counter/hour",
+      "/counter/month",
+      "/counter/payroll",
 
     ],
     target,

@@ -110,11 +110,11 @@ namespace Countdown_prototype.Server.Controllers
 
             if (now.DayOfWeek == DayOfWeek.Saturday || now.DayOfWeek == DayOfWeek.Sunday || (now.DayOfWeek == DayOfWeek.Friday && now.Hour >= 17))
             {
-               var nextMonday = now.AddDays(((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7);
+                var nextMonday = now.AddDays(((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7);
                 startDate = new DateTime(nextMonday.Year, nextMonday.Month, nextMonday.Day, 7, 0, 0);
                 endDate = startDate.AddHours(10);
             }
-          
+
             var totalDuration = endDate - startDate;
             var elapsed = now - startDate;
 
@@ -277,6 +277,94 @@ namespace Countdown_prototype.Server.Controllers
 
             var endDate = startDate.AddHours(1);
 
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage =
+                elapsed.TotalMilliseconds /
+                totalDuration.TotalMilliseconds * 100;
+
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage
+            };
+        }
+
+        [HttpGet]
+        [Route("month")]
+        public object GetMonth()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+               DateTime.UtcNow,
+               mexicoTimeZone
+           ).AddHours(-1);
+
+
+            var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
+            var endDate = startDate.AddMonths(1);
+
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage =
+                elapsed.TotalMilliseconds /
+                totalDuration.TotalMilliseconds * 100;
+
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage
+            };
+        }
+
+
+        [HttpGet]
+        [Route("payroll")]
+        public object GetPayroll()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+               DateTime.UtcNow,
+               mexicoTimeZone
+           ).AddHours(-1);
+
+            var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
+            var endDate = startDate.AddMonths(1);
+
+            var dayOfMonth = now.Day;
+
+            if (dayOfMonth < 15)
+            {
+                startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
+                endDate = new DateTime(now.Year, now.Month, 15, 0, 0, 0);
+            }
+            else
+            {
+                startDate = new DateTime(now.Year, now.Month, 15, 0, 0, 0);
+                endDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0).AddMonths(1);
+            }
 
             var totalDuration = endDate - startDate;
             var elapsed = now - startDate;

@@ -23,8 +23,8 @@ export class App implements OnInit, OnDestroy {
   public weekendResult: any = {};
   public yearResult: any = {};
   public hourResult: any = {};
-
-
+  public monthResult: any = {};
+  public payrollResult: any = {};
 
   private timerId?: number;
 
@@ -47,7 +47,9 @@ export class App implements OnInit, OnDestroy {
       work: this.http.get('/counter/work'),
       weekend: this.http.get('/counter/weekend'),
       year: this.http.get('/counter/year'),
-      hour: this.http.get('/counter/hour')
+      hour: this.http.get('/counter/hour'),
+      month: this.http.get('/counter/month'),
+      payroll: this.http.get('/counter/payroll')
     }).subscribe({
       next: (result) => {
         this.counterResult = result.counter;
@@ -56,6 +58,8 @@ export class App implements OnInit, OnDestroy {
         this.weekendResult = result.weekend;
         this.yearResult = result.year;
         this.hourResult = result.hour;
+        this.monthResult = result.month;
+        this.payrollResult = result.payroll;
       },
       error: (error) => {
         console.error(error);
