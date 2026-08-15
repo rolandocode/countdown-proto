@@ -25,6 +25,7 @@ export class App implements OnInit, OnDestroy {
   public hourResult: any = {};
   public monthResult: any = {};
   public payrollResult: any = {};
+  public pause: boolean = false;
 
   private timerId?: number;
 
@@ -36,7 +37,9 @@ export class App implements OnInit, OnDestroy {
 
     // Refresh every 10 seconds
     this.timerId = window.setInterval(() => {
-      this.getPercentage();
+      if (!this.pause) {
+        this.getPercentage();
+      } 
     }, 10000);
   }
 

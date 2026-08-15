@@ -29,7 +29,7 @@
       padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
 
-    /* Mobile First Layout (1 per row) */
+    /* Mobile First Layout */
     .cards-container {
       width: 100%;
       max-width: 1200px;
@@ -38,7 +38,97 @@
       gap: 20px;
     }
 
-    /* Desktop Layout (3 per row for >= 1024px) */
+    /* Header */
+    .header-card {
+      position: relative;
+      padding: 28px 30px;
+      border-radius: 20px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .header {
+      width: 100%;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 6px;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .header h1 {
+      color: #0f172a;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header p {
+      margin-top: 8px;
+      color: #64748b;
+      font-size: 0.95rem;
+    }
+
+    /* Play / Pause Button */
+    .refresh-toggle {
+      margin-top: 20px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 50%;
+      background: #f8fafc;
+      color: #334155;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+      .refresh-toggle:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+        transform: scale(1.06);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.10);
+      }
+
+      .refresh-toggle:active {
+        transform: scale(0.94);
+      }
+
+      .refresh-toggle:focus-visible {
+        outline: 3px solid rgba(59, 130, 246, 0.25);
+        outline-offset: 3px;
+      }
+
+      .refresh-toggle svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* Paused state */
+      .refresh-toggle.paused {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: white;
+      }
+
+        .refresh-toggle.paused:hover {
+          background: #1e293b;
+          border-color: #1e293b;
+        }
+
+    /* Desktop Layout */
     @media (min-width: 1024px) {
       .cards-container {
         grid-template-columns: repeat(3, 1fr);
@@ -48,8 +138,27 @@
         grid-column: 1 / -1;
       }
     }
+
+    /* Smaller screens */
+    @media (max-width: 480px) {
+      .header-card {
+        padding: 24px;
+      }
+
+      .refresh-toggle {
+        width: 44px;
+        height: 44px;
+        margin-top: 18px;
+      }
+
+        .refresh-toggle svg {
+          width: 18px;
+          height: 18px;
+        }
+    }
   </style>
 </head>
+
 <body>
 
   <div class="page">
@@ -57,21 +166,86 @@
 
       <!-- HEADER CARD -->
       <header class="header-card">
+
         <div class="header">
           <span class="eyebrow">COUNTDOWN</span>
+
           <h1>Countdown Dashboard</h1>
-          <p>Progress metrics across active tracking endpoints.</p>
+
+          <p>
+            {{
+ pause
+              ? 'Automatic refresh is paused.'
+              : 'Progress metrics across active tracking endpoints.'
+            }}
+          </p>
         </div>
+
+        <!-- PLAY / PAUSE -->
+        <button type="button"
+                class="refresh-toggle"
+                [class.paused]="pause"
+                (click)="pause = !pause"
+                [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'"
+                [attr.title]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
+
+          <!-- PLAY -->
+          <svg *ngIf="pause"
+               viewBox="0 0 24 24"
+               aria-hidden="true">
+            <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+          </svg>
+
+          <!-- PAUSE -->
+          <svg *ngIf="!pause"
+               viewBox="0 0 24 24"
+               aria-hidden="true">
+            <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+          </svg>
+
+        </button>
+
       </header>
 
-      <app-countdown [counterResult]="counterResult" [counterName]="'TEST GENERIC API'" [decimalPrecission]="5"></app-countdown>
-      <app-countdown [counterResult]="payrollResult" [counterName]="'PAYROLL API'" [decimalPrecission]="4"></app-countdown>
-      <app-countdown [counterResult]="counterApiResult" [counterName]="'DAY API'" [decimalPrecission]="3"></app-countdown>
-      <app-countdown [counterResult]="hourResult" [counterName]="'HOUR API'" [decimalPrecission]="1"></app-countdown>
-      <app-countdown [counterResult]="workResult" [counterName]="'WORK API'" [decimalPrecission]="3"></app-countdown>
-      <app-countdown [counterResult]="weekendResult" [counterName]="'WEEKEND API'" [decimalPrecission]="3" ></app-countdown>
-      <app-countdown [counterResult]="monthResult" [counterName]="'MONTH API'" [decimalPrecission]="4"></app-countdown>
-      <app-countdown [counterResult]="yearResult" [counterName]="'WHOLE YEAR API'" [decimalPrecission]="5"></app-countdown>
+      <app-countdown [counterResult]="counterResult"
+                     [counterName]="'TEST GENERIC API'"
+                     [decimalPrecission]="5">
+      </app-countdown>
+
+      <app-countdown [counterResult]="payrollResult"
+                     [counterName]="'PAYROLL API'"
+                     [decimalPrecission]="4">
+      </app-countdown>
+
+      <app-countdown [counterResult]="counterApiResult"
+                     [counterName]="'DAY API'"
+                     [decimalPrecission]="3">
+      </app-countdown>
+
+      <app-countdown [counterResult]="hourResult"
+                     [counterName]="'HOUR API'"
+                     [decimalPrecission]="1">
+      </app-countdown>
+
+      <app-countdown [counterResult]="workResult"
+                     [counterName]="'WORK API'"
+                     [decimalPrecission]="3">
+      </app-countdown>
+
+      <app-countdown [counterResult]="weekendResult"
+                     [counterName]="'WEEKEND API'"
+                     [decimalPrecission]="3">
+      </app-countdown>
+
+      <app-countdown [counterResult]="monthResult"
+                     [counterName]="'MONTH API'"
+                     [decimalPrecission]="4">
+      </app-countdown>
+
+      <app-countdown [counterResult]="yearResult"
+                     [counterName]="'WHOLE YEAR API'"
+                     [decimalPrecission]="5">
+      </app-countdown>
 
     </div>
   </div>
