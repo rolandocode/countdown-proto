@@ -178,7 +178,7 @@ h1 {
 .footer {
   margin-top: clamp(16px, 3vw, 24px);
   font-size: 13px;
-  color: #94a3b8;
+  font-weight: bold
 }
 
 @media (max-width: 480px) {

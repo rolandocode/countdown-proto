@@ -39,7 +39,7 @@
     </div>
 
     <div class="footer">
-      {{ counterResult.percentage | number:'1.2-2' }}% completed
+      {{ (100 - counterResult.percentage).toFixed(6) }}% remaining
     </div>
   </div>
 </main>
