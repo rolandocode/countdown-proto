@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace Countdown_prototype.Server.Controllers
 {
@@ -9,6 +10,37 @@ namespace Countdown_prototype.Server.Controllers
     {
 
         public CounterController() { }
+
+        private string GetIP()
+        {
+            string clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            return clientIp;
+        }
+
+        private static readonly object _logLock = new object();
+
+        private void WriteLog(string requestName, DateTime now)
+        {
+            lock (_logLock)
+            {
+                try
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "requestLogs.csv");
+
+                    // FileShare.ReadWrite allows other streams/endpoints to access the file simultaneously
+                    using var stream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    using var writer = new StreamWriter(stream);
+
+                    writer.WriteLine($"{GetIP()}|{now:yyyy-MM-dd HH:mm:ss}|'{requestName}'");
+                }
+                catch (IOException ex)
+                {
+                    // Catches temporary external locks (e.g., OneDrive or Excel holding the file)
+                    // Prevents the API request from crashing
+                    System.Diagnostics.Debug.WriteLine($"Log write skipped: {ex.Message}");
+                }
+            }
+        }
 
         [HttpGet]
         public object Get()
@@ -40,6 +72,7 @@ namespace Countdown_prototype.Server.Controllers
 
             percentage = Math.Clamp(percentage, 0, 100);
 
+            WriteLog("Get Generic Request", now);
             return new
             {
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -78,6 +111,7 @@ namespace Countdown_prototype.Server.Controllers
                 totalDuration.TotalMilliseconds * 100;
 
             percentage = Math.Clamp(percentage, 0, 100);
+            WriteLog("Get Day Request", now);
 
             return new
             {
@@ -128,6 +162,8 @@ namespace Countdown_prototype.Server.Controllers
             {
                 percentage = 0;
             }
+
+            WriteLog("Get Work Request", now);
 
             return new
             {
@@ -209,6 +245,9 @@ namespace Countdown_prototype.Server.Controllers
             //    percentage = 0;
             //}
 
+            WriteLog("Get Weekend Request", now);
+
+
             return new
             {
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -247,6 +286,8 @@ namespace Countdown_prototype.Server.Controllers
                 totalDuration.TotalMilliseconds * 100;
 
             percentage = Math.Clamp(percentage, 0, 100);
+
+            WriteLog("Get Year Request", now);
 
             return new
             {
@@ -287,6 +328,8 @@ namespace Countdown_prototype.Server.Controllers
 
             percentage = Math.Clamp(percentage, 0, 100);
 
+            WriteLog("Get Hour Request", now);
+
             return new
             {
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -324,6 +367,8 @@ namespace Countdown_prototype.Server.Controllers
                 totalDuration.TotalMilliseconds * 100;
 
             percentage = Math.Clamp(percentage, 0, 100);
+
+            WriteLog("Get Month Request", now);
 
             return new
             {
@@ -375,6 +420,9 @@ namespace Countdown_prototype.Server.Controllers
 
             percentage = Math.Clamp(percentage, 0, 100);
 
+            WriteLog("Get Payroll Request", now);
+
+
             return new
             {
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -382,6 +430,55 @@ namespace Countdown_prototype.Server.Controllers
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage
             };
+        }
+
+        [HttpGet]
+        [Route("logs")]
+        public IActionResult GetLogs()
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "requestLogs.csv");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Log file does not exist yet.");
+            }
+
+            // Open stream with FileShare.ReadWrite to avoid locking collisions with AppendAllText
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+            return File(stream, "text/csv", "requestLogs.csv");
+        }
+
+        [HttpGet]
+        [Route("clearLogs")]
+        public IActionResult ClearLogs()
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "requestLogs.csv");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Log file does not exist.");
+            }
+
+            try
+            {
+                lock (_logLock)
+                {
+                    // FileMode.Create overwrites the file and truncates its size to 0 bytes
+                    using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                }
+
+                return Ok(new { message = "Log file cleared successfully." });
+            }
+            catch (IOException ex)
+            {
+                // Triggers if another process (like Excel) holds an exclusive lock on the file
+                return StatusCode(409, $"Cannot clear log file because it is locked by another process: {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, $"Permission denied: {ex.Message}");
+            }
         }
     }
 }
