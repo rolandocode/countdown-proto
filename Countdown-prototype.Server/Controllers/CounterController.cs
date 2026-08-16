@@ -215,7 +215,14 @@ namespace Countdown_prototype.Server.Controllers
             if (currentDayOfWeek == DayOfWeek.Saturday || currentDayOfWeek == DayOfWeek.Sunday)
             {
 
-                var diffDays = (int)now.DayOfWeek - (int)DayOfWeek.Friday;
+                var diffDays = 0;
+                if (currentDayOfWeek == DayOfWeek.Saturday)
+                    diffDays = (int)now.DayOfWeek - (int)DayOfWeek.Friday;
+
+                if (currentDayOfWeek == DayOfWeek.Sunday)
+                    diffDays = 2;
+
+
                 fridayStartDate = now.AddDays(-diffDays);
                 startDate = new DateTime(fridayStartDate.Year, fridayStartDate.Month, fridayStartDate.Day, 17, 0, 0);
             }
@@ -462,13 +469,19 @@ namespace Countdown_prototype.Server.Controllers
 
             try
             {
+                var lineCount = 0;
+                var fileSizeBytes = 0L;
                 lock (_logLock)
                 {
+                    var fileInfo = new FileInfo(filePath);
+                    fileSizeBytes = fileInfo.Length; // Get size in bytes before clearing
+
+                    lineCount = System.IO.File.ReadLines(filePath).Count();
                     // FileMode.Create overwrites the file and truncates its size to 0 bytes
                     using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
                 }
 
-                return Ok(new { message = "Log file cleared successfully." });
+                return Ok(new { message = $"Log file cleared successfully. {lineCount} lines removed. {fileSizeBytes} bytes cleaned" });
             }
             catch (IOException ex)
             {
