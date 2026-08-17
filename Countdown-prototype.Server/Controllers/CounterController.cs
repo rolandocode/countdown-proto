@@ -212,7 +212,7 @@ namespace Countdown_prototype.Server.Controllers
             var startDate = now;
             var fridayStartDate = now;
 
-            if (currentDayOfWeek == DayOfWeek.Saturday || currentDayOfWeek == DayOfWeek.Sunday)
+            if (currentDayOfWeek == DayOfWeek.Saturday || currentDayOfWeek == DayOfWeek.Sunday || (currentDayOfWeek == DayOfWeek.Monday && now.Hour < 7))
             {
 
                 var diffDays = 0;
@@ -221,6 +221,9 @@ namespace Countdown_prototype.Server.Controllers
 
                 if (currentDayOfWeek == DayOfWeek.Sunday)
                     diffDays = 2;
+
+                if (currentDayOfWeek == DayOfWeek.Monday && now.Hour < 7)
+                    diffDays = 3;
 
 
                 fridayStartDate = now.AddDays(-diffDays);
