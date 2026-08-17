@@ -26,21 +26,50 @@ export class App implements OnInit, OnDestroy {
   public monthResult: any = {};
   public payrollResult: any = {};
   public pause: boolean = false;
+  public renderTimer: boolean = true;
 
-  private timerId?: number;
+  private timerId?: any;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    // Load immediately
     this.getPercentage();
+    this.startTimer();
+  }
 
-    // Refresh every 10 seconds
-    this.timerId = window.setInterval(() => {
+  startTimer() {
+    this.stopTimer();
+    this.timerId = setInterval(() => {
       if (!this.pause) {
         this.getPercentage();
-      } 
+      }
     }, 10000);
+  }
+
+  stopTimer() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+      this.timerId = undefined;
+    }
+  }
+
+  togglePause() {
+    this.pause = !this.pause;
+
+    if (!this.pause) {
+      // Unpaused: trigger API, reset interval timer
+      this.getPercentage();
+      this.startTimer();
+
+      // Force SVG animation reset by toggling render flag
+      this.renderTimer = false;
+      setTimeout(() => {
+        this.renderTimer = true;
+      }, 0);
+    } else {
+      // Paused: stop interval timer
+      this.stopTimer();
+    }
   }
 
   getPercentage() {
@@ -71,9 +100,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.timerId) {
-      window.clearInterval(this.timerId);
-    }
+    this.stopTimer();
   }
 
   protected readonly title = signal('countdown-prototype.client');

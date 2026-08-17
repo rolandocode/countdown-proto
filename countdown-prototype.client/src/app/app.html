@@ -78,9 +78,53 @@
       font-size: 0.95rem;
     }
 
+    /* Circular Timer Wrapper */
+    .timer-ring-container {
+      position: relative;
+      width: 58px;
+      height: 58px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .timer-ring-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg) scaleY(-1);
+      pointer-events: none;
+    }
+
+    .timer-ring-bg {
+      stroke: #e2e8f0;
+      stroke-width: 3;
+    }
+
+    .timer-ring-progress {
+      stroke: #3b82f6;
+      stroke-width: 3;
+      stroke-dasharray: 163.36;
+      stroke-dashoffset: 0;
+      stroke-linecap: round;
+      animation: countdown 10s linear infinite;
+    }
+
+    @keyframes countdown {
+      from {
+        stroke-dashoffset: 0;
+      }
+
+      to {
+        stroke-dashoffset: 163.36;
+      }
+    }
+
     /* Play / Pause Button */
     .refresh-toggle {
-      margin-top: 20px;
       width: 48px;
       height: 48px;
       display: flex;
@@ -91,6 +135,7 @@
       background: #f8fafc;
       color: #334155;
       cursor: pointer;
+      z-index: 1;
       transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -145,10 +190,15 @@
         padding: 24px;
       }
 
-      .refresh-toggle {
-        width: 44px;
-        height: 44px;
+      .timer-ring-container {
+        width: 52px;
+        height: 52px;
         margin-top: 18px;
+      }
+
+      .refresh-toggle {
+        width: 42px;
+        height: 42px;
       }
 
         .refresh-toggle svg {
@@ -158,7 +208,6 @@
     }
   </style>
 </head>
-
 <body>
 
   <div class="page">
@@ -174,36 +223,51 @@
 
           <p>
             {{
- pause
-              ? 'Automatic refresh is paused.'
-              : 'Progress metrics across active tracking endpoints.'
+              pause
+                ? 'Automatic refresh is paused.'
+                : 'Progress metrics across active tracking endpoints.'
             }}
           </p>
         </div>
 
-        <!-- PLAY / PAUSE -->
-        <button type="button"
-                class="refresh-toggle"
-                [class.paused]="pause"
-                (click)="pause = !pause"
-                [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'"
-                [attr.title]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
+        <!-- CIRCULAR TIMER WRAPPER -->
+        <div class="timer-ring-container">
 
-          <!-- PLAY -->
-          <svg *ngIf="pause"
-               viewBox="0 0 24 24"
-               aria-hidden="true">
-            <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+          <!-- Animated ring (visible only when active and renderTimer is true) -->
+          <svg *ngIf="!pause && renderTimer" class="timer-ring-svg" viewBox="0 0 58 58">
+            <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+            <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-          <!-- PAUSE -->
-          <svg *ngIf="!pause"
-               viewBox="0 0 24 24"
-               aria-hidden="true">
-            <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+          <!-- Static background ring shown while paused -->
+          <svg *ngIf="pause" class="timer-ring-svg" viewBox="0 0 58 58">
+            <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-        </button>
+          <!-- PLAY / PAUSE BUTTON -->
+          <button type="button"
+                  class="refresh-toggle"
+                  [class.paused]="pause"
+                  (click)="togglePause()"
+                  [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'"
+                  [attr.title]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
+
+            <!-- PLAY -->
+            <svg *ngIf="pause"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true">
+              <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+            </svg>
+
+            <!-- PAUSE -->
+            <svg *ngIf="!pause"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true">
+              <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+            </svg>
+
+          </button>
+        </div>
 
       </header>
 
@@ -249,6 +313,5 @@
 
     </div>
   </div>
-
 </body>
 </html>
