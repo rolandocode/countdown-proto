@@ -29,7 +29,7 @@
       padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     }
 
-    /* Mobile First Layout */
+    /* Grid Layout */
     .cards-container {
       width: 100%;
       max-width: 1200px;
@@ -38,7 +38,7 @@
       gap: 20px;
     }
 
-    /* Header */
+    /* Main Header Card */
     .header-card {
       position: relative;
       padding: 28px 30px;
@@ -78,15 +78,16 @@
       font-size: 0.95rem;
     }
 
-    /* Circular Timer Wrapper */
+    /* Circular Timer Container */
     .timer-ring-container {
       position: relative;
-      width: 58px;
-      height: 58px;
+      width: 54px;
+      height: 54px;
       margin-top: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .timer-ring-svg {
@@ -101,12 +102,12 @@
 
     .timer-ring-bg {
       stroke: #e2e8f0;
-      stroke-width: 3;
+      stroke-width: 3.5;
     }
 
     .timer-ring-progress {
       stroke: #3b82f6;
-      stroke-width: 3;
+      stroke-width: 3.5;
       stroke-dasharray: 163.36;
       stroke-dashoffset: 0;
       stroke-linecap: round;
@@ -123,57 +124,52 @@
       }
     }
 
-    /* Play / Pause Button */
+    /* Seamless Proportional Button */
     .refresh-toggle {
-      width: 48px;
-      height: 48px;
+      position: absolute;
+      inset: 5px; /* Leaves clear space for the SVG ring around it */
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #cbd5e1;
       border-radius: 50%;
-      background: #f8fafc;
-      color: #334155;
+      background: #ffffff;
+      color: #0f172a;
       cursor: pointer;
       z-index: 1;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
       .refresh-toggle:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-        transform: scale(1.06);
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.10);
+        background: #f8fafc;
+        border-color: #94a3b8;
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
       }
 
       .refresh-toggle:active {
-        transform: scale(0.94);
+        transform: scale(0.95);
       }
 
-      .refresh-toggle:focus-visible {
-        outline: 3px solid rgba(59, 130, 246, 0.25);
-        outline-offset: 3px;
-      }
-
-      .refresh-toggle svg {
-        width: 20px;
-        height: 20px;
-        fill: currentColor;
-      }
-
-      /* Paused state */
+      /* Paused State Styles */
       .refresh-toggle.paused {
-        background: #0f172a;
-        border-color: #0f172a;
-        color: white;
+        background: #f1f5f9;
+        border-color: #94a3b8;
+        color: #0f172a;
       }
 
         .refresh-toggle.paused:hover {
-          background: #1e293b;
-          border-color: #1e293b;
+          background: #e2e8f0;
+          border-color: #64748b;
         }
 
-    /* Spinner animation for HTTP loading */
+      .refresh-toggle svg {
+        width: 45%;
+        height: 45%;
+        fill: currentColor;
+      }
+
     .spinner {
       animation: spin 1s linear infinite;
       transform-origin: center;
@@ -183,6 +179,15 @@
       100% {
         transform: rotate(360deg);
       }
+    }
+
+    /* Card Layout Frame */
+    .card-item {
+      position: relative;
+    }
+
+    .card-mobile-header {
+      display: none; /* Desktop default */
     }
 
     /* Desktop Layout */
@@ -196,26 +201,47 @@
       }
     }
 
-    /* Smaller screens */
-    @media (max-width: 480px) {
-      .header-card {
-        padding: 24px;
+    /* Mobile Only Adjustments */
+    @media (max-width: 767px) {
+      /* Hide top header button on mobile */
+      .header-card .timer-ring-container {
+        display: none;
       }
 
-      .timer-ring-container {
-        width: 52px;
-        height: 52px;
-        margin-top: 18px;
+      .card-item {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        padding-top: 10px;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
       }
 
-      .refresh-toggle {
-        width: 42px;
-        height: 42px;
+      /* Compact Header for each counter on Mobile */
+      .card-mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px 8px 16px;
+        border-bottom: 1px dashed #f1f5f9;
       }
 
-        .refresh-toggle svg {
-          width: 18px;
-          height: 18px;
+        .card-mobile-header .card-title {
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: #475569;
+          letter-spacing: 0.05em;
+        }
+
+        /* Proportional ultra-small size for mobile card headers */
+        .card-mobile-header .timer-ring-container {
+          width: 32px;
+          height: 32px;
+          margin-top: 0;
+        }
+
+        .card-mobile-header .refresh-toggle {
+          inset: 3px;
+          border-width: 1px;
         }
     }
   </style>
@@ -225,7 +251,7 @@
   <div class="page">
     <div class="cards-container">
 
-      <!-- HEADER CARD -->
+      <!-- MAIN HEADER CARD -->
       <header class="header-card">
 
         <div class="header">
@@ -242,52 +268,33 @@
           </p>
         </div>
 
-        <!-- CIRCULAR TIMER WRAPPER -->
+        <!-- CIRCULAR TIMER WRAPPER (Desktop only) -->
         <div class="timer-ring-container">
 
-          <!-- Animated ring (rendered only when active and server response completes) -->
           <svg *ngIf="!pause && isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
             <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
             <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-          <!-- Static background ring shown while paused or waiting for HTTP response -->
           <svg *ngIf="pause || !isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
             <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-          <!-- PLAY / PAUSE / LOADING BUTTON -->
           <button type="button"
                   class="refresh-toggle"
                   [class.paused]="pause"
                   (click)="togglePause()"
-                  [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'"
-                  [attr.title]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
+                  [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
 
-            <!-- LOADING SPINNER (Shows while HTTP request is in-flight) -->
-            <svg *ngIf="isLoading && !pause"
-                 class="spinner"
-                 viewBox="0 0 24 24"
-                 fill="none"
-                 stroke="currentColor"
-                 stroke-width="2"
-                 stroke-linecap="round"
-                 stroke-linejoin="round"
-                 aria-hidden="true">
+            <svg *ngIf="isLoading && !pause" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
 
-            <!-- PLAY (Shown when paused) -->
-            <svg *ngIf="pause"
-                 viewBox="0 0 24 24"
-                 aria-hidden="true">
+            <svg *ngIf="pause" viewBox="0 0 24 24">
               <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
             </svg>
 
-            <!-- PAUSE (Shown when active and idle) -->
-            <svg *ngIf="!pause && !isLoading"
-                 viewBox="0 0 24 24"
-                 aria-hidden="true">
+            <svg *ngIf="!pause && !isLoading" viewBox="0 0 24 24">
               <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
             </svg>
 
@@ -296,45 +303,106 @@
 
       </header>
 
-      <app-countdown [counterResult]="counterResult"
-                     [counterName]="'TEST GENERIC API'"
-                     [decimalPrecission]="5">
-      </app-countdown>
+      <!-- Reusable template for card top headers on mobile -->
+      <ng-template #cardHeader let-title="title">
+        <div class="card-mobile-header">
+          <span class="card-title">{{ title }}</span>
 
-      <app-countdown [counterResult]="payrollResult"
-                     [counterName]="'PAYROLL API'"
-                     [decimalPrecission]="4">
-      </app-countdown>
+          <div class="timer-ring-container">
+            <svg *ngIf="!pause && isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+              <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+              <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
+            </svg>
 
-      <app-countdown [counterResult]="counterApiResult"
-                     [counterName]="'DAY API'"
-                     [decimalPrecission]="3">
-      </app-countdown>
+            <svg *ngIf="pause || !isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+              <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+            </svg>
 
-      <app-countdown [counterResult]="hourResult"
-                     [counterName]="'HOUR API'"
-                     [decimalPrecission]="1">
-      </app-countdown>
+            <button type="button"
+                    class="refresh-toggle"
+                    [class.paused]="pause"
+                    (click)="togglePause()">
 
-      <app-countdown [counterResult]="workResult"
-                     [counterName]="'WORK API'"
-                     [decimalPrecission]="3">
-      </app-countdown>
+              <svg *ngIf="isLoading && !pause" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+              </svg>
 
-      <app-countdown [counterResult]="weekendResult"
-                     [counterName]="'WEEKEND API'"
-                     [decimalPrecission]="3">
-      </app-countdown>
+              <svg *ngIf="pause" viewBox="0 0 24 24">
+                <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+              </svg>
 
-      <app-countdown [counterResult]="monthResult"
-                     [counterName]="'MONTH API'"
-                     [decimalPrecission]="4">
-      </app-countdown>
+              <svg *ngIf="!pause && !isLoading" viewBox="0 0 24 24">
+                <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </ng-template>
 
-      <app-countdown [counterResult]="yearResult"
-                     [counterName]="'WHOLE YEAR API'"
-                     [decimalPrecission]="5">
-      </app-countdown>
+      <!-- COUNTER CARDS -->
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'TEST GENERIC API' }"></ng-container>
+        <app-countdown [counterResult]="counterResult"
+                       [counterName]="'TEST GENERIC API'"
+                       [decimalPrecission]="5">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'PAYROLL API' }"></ng-container>
+        <app-countdown [counterResult]="payrollResult"
+                       [counterName]="'PAYROLL API'"
+                       [decimalPrecission]="4">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'DAY API' }"></ng-container>
+        <app-countdown [counterResult]="counterApiResult"
+                       [counterName]="'DAY API'"
+                       [decimalPrecission]="3">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'HOUR API' }"></ng-container>
+        <app-countdown [counterResult]="hourResult"
+                       [counterName]="'HOUR API'"
+                       [decimalPrecission]="1">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WORK API' }"></ng-container>
+        <app-countdown [counterResult]="workResult"
+                       [counterName]="'WORK API'"
+                       [decimalPrecission]="3">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WEEKEND API' }"></ng-container>
+        <app-countdown [counterResult]="weekendResult"
+                       [counterName]="'WEEKEND API'"
+                       [decimalPrecission]="3">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'MONTH API' }"></ng-container>
+        <app-countdown [counterResult]="monthResult"
+                       [counterName]="'MONTH API'"
+                       [decimalPrecission]="4">
+        </app-countdown>
+      </div>
+
+      <div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WHOLE YEAR API' }"></ng-container>
+        <app-countdown [counterResult]="yearResult"
+                       [counterName]="'WHOLE YEAR API'"
+                       [decimalPrecission]="5">
+        </app-countdown>
+      </div>
 
     </div>
   </div>
