@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 interface WeatherForecast {
   date: string;
@@ -26,22 +27,36 @@ export class App implements OnInit, OnDestroy {
   public monthResult: any = {};
   public payrollResult: any = {};
   public pause: boolean = false;
-  public renderTimer: boolean = true;
+
+  // Controls when the timer ring is animated
+  public isAnimating: boolean = false;
+  // Indicates whether an active request is in-flight
+  public isLoading: boolean = false;
 
   private timerId?: any;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
+    this.fetchDataAndStartTimer();
+  }
+
+  fetchDataAndStartTimer() {
+    // Prevent overlapping requests
+    if (this.isLoading) return;
+
+    this.stopTimer();
+    this.isAnimating = false;
+    this.isLoading = true;
+
     this.getPercentage();
-    this.startTimer();
   }
 
   startTimer() {
     this.stopTimer();
     this.timerId = setInterval(() => {
       if (!this.pause) {
-        this.getPercentage();
+        this.fetchDataAndStartTimer();
       }
     }, 10000);
   }
@@ -57,18 +72,12 @@ export class App implements OnInit, OnDestroy {
     this.pause = !this.pause;
 
     if (!this.pause) {
-      // Unpaused: trigger API, reset interval timer
-      this.getPercentage();
-      this.startTimer();
-
-      // Force SVG animation reset by toggling render flag
-      this.renderTimer = false;
-      setTimeout(() => {
-        this.renderTimer = true;
-      }, 0);
+      // Unpaused: trigger API and reset timer loop
+      this.fetchDataAndStartTimer();
     } else {
-      // Paused: stop interval timer
+      // Paused: stop interval and halt animation
       this.stopTimer();
+      this.isAnimating = false;
     }
   }
 
@@ -82,21 +91,37 @@ export class App implements OnInit, OnDestroy {
       hour: this.http.get('/counter/hour'),
       month: this.http.get('/counter/month'),
       payroll: this.http.get('/counter/payroll')
-    }).subscribe({
-      next: (result) => {
-        this.counterResult = result.counter;
-        this.counterApiResult = result.counterApi;
-        this.workResult = result.work;
-        this.weekendResult = result.weekend;
-        this.yearResult = result.year;
-        this.hourResult = result.hour;
-        this.monthResult = result.month;
-        this.payrollResult = result.payroll;
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+    })
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          this.counterResult = result.counter;
+          this.counterApiResult = result.counterApi;
+          this.workResult = result.work;
+          this.weekendResult = result.weekend;
+          this.yearResult = result.year;
+          this.hourResult = result.hour;
+          this.monthResult = result.month;
+          this.payrollResult = result.payroll;
+
+          // Start 10s ring animation and timer cycle ONLY after server responds
+          if (!this.pause) {
+            this.isAnimating = true;
+            this.startTimer();
+          }
+        },
+        error: (error) => {
+          console.error(error);
+          // Retry fetch cycle after interval even on error
+          if (!this.pause) {
+            this.startTimer();
+          }
+        }
+      });
   }
 
   ngOnDestroy() {

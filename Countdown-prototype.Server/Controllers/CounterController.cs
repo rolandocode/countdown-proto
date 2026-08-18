@@ -8,8 +8,11 @@ namespace Countdown_prototype.Server.Controllers
     [Route("[controller]")]
     public class CounterController : ControllerBase
     {
-
-        public CounterController() { }
+        private readonly IConfiguration _configuration;
+        public CounterController(IConfiguration config)
+        {
+            _configuration = config;
+        }
 
         private string GetIP()
         {
@@ -19,8 +22,13 @@ namespace Countdown_prototype.Server.Controllers
 
         private static readonly object _logLock = new object();
 
+
         private void WriteLog(string requestName, DateTime now)
         {
+            bool fileLog = _configuration.GetValue<bool>("fileLog");
+            if (!fileLog)
+                return;
+
             lock (_logLock)
             {
                 try

@@ -173,6 +173,18 @@
           border-color: #1e293b;
         }
 
+    /* Spinner animation for HTTP loading */
+    .spinner {
+      animation: spin 1s linear infinite;
+      transform-origin: center;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     /* Desktop Layout */
     @media (min-width: 1024px) {
       .cards-container {
@@ -233,18 +245,18 @@
         <!-- CIRCULAR TIMER WRAPPER -->
         <div class="timer-ring-container">
 
-          <!-- Animated ring (visible only when active and renderTimer is true) -->
-          <svg *ngIf="!pause && renderTimer" class="timer-ring-svg" viewBox="0 0 58 58">
+          <!-- Animated ring (rendered only when active and server response completes) -->
+          <svg *ngIf="!pause && isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
             <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
             <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-          <!-- Static background ring shown while paused -->
-          <svg *ngIf="pause" class="timer-ring-svg" viewBox="0 0 58 58">
+          <!-- Static background ring shown while paused or waiting for HTTP response -->
+          <svg *ngIf="pause || !isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
             <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
           </svg>
 
-          <!-- PLAY / PAUSE BUTTON -->
+          <!-- PLAY / PAUSE / LOADING BUTTON -->
           <button type="button"
                   class="refresh-toggle"
                   [class.paused]="pause"
@@ -252,15 +264,28 @@
                   [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'"
                   [attr.title]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
 
-            <!-- PLAY -->
+            <!-- LOADING SPINNER (Shows while HTTP request is in-flight) -->
+            <svg *ngIf="isLoading && !pause"
+                 class="spinner"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+
+            <!-- PLAY (Shown when paused) -->
             <svg *ngIf="pause"
                  viewBox="0 0 24 24"
                  aria-hidden="true">
               <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
             </svg>
 
-            <!-- PAUSE -->
-            <svg *ngIf="!pause"
+            <!-- PAUSE (Shown when active and idle) -->
+            <svg *ngIf="!pause && !isLoading"
                  viewBox="0 0 24 24"
                  aria-hidden="true">
               <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
