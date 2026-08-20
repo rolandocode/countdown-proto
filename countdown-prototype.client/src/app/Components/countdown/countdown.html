@@ -41,5 +41,9 @@
     <div class="footer">
       {{ (100 - counterResult.percentage).toFixed(decimalPrecission) }}% remaining
     </div>
+
+    <div class="footer">
+      {{ (100 / counterResult.percentage).toFixed(decimalPrecission) }} times rate
+    </div>
   </div>
 </main>
