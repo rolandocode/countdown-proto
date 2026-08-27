@@ -401,6 +401,455 @@
         <app-countdown [counterResult]="yearResult"
                        [counterName]="'WHOLE YEAR API'"
                        [decimalPrecission]="5">
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+            <title>Countdown</title>
+            <style>
+              * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+              }
+
+              html, body {
+                width: 100%;
+                min-height: 100%;
+                background-color: #f8fafc;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                -webkit-tap-highlight-color: transparent;
+              }
+
+              .page {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+                min-height: 100dvh;
+                width: 100%;
+                padding: max(24px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+              }
+
+              /* Grid Layout */
+              .cards-container {
+                width: 100%;
+                max-width: 1200px;
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 20px;
+              }
+
+              /* Main Header Card */
+              .header-card {
+                position: relative;
+                padding: 28px 30px;
+                border-radius: 20px;
+                background: white;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+              }
+
+              .header {
+                width: 100%;
+              }
+
+              .eyebrow {
+                display: block;
+                margin-bottom: 6px;
+                color: #64748b;
+                font-size: 0.75rem;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+              }
+
+              .header h1 {
+                color: #0f172a;
+                font-size: clamp(1.5rem, 3vw, 2rem);
+                font-weight: 700;
+                line-height: 1.2;
+              }
+
+              .header p {
+                margin-top: 8px;
+                color: #64748b;
+                font-size: 0.95rem;
+              }
+
+              /* Circular Timer Container for Header Pause/Play */
+              .timer-ring-container {
+                position: relative;
+                width: 54px;
+                height: 54px;
+                margin-top: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+              }
+
+              .timer-ring-svg {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg) scaleY(-1);
+                pointer-events: none;
+              }
+
+              .timer-ring-bg {
+                stroke: #e2e8f0;
+                stroke-width: 3.5;
+              }
+
+              .timer-ring-progress {
+                stroke: #3b82f6;
+                stroke-width: 3.5;
+                stroke-dasharray: 163.36;
+                stroke-dashoffset: 0;
+                stroke-linecap: round;
+                animation: countdown 10s linear infinite;
+              }
+
+              @keyframes countdown {
+                from {
+                  stroke-dashoffset: 0;
+                }
+
+                to {
+                  stroke-dashoffset: 163.36;
+                }
+              }
+
+              /* Seamless Proportional Button */
+              .refresh-toggle {
+                position: absolute;
+                inset: 5px; /* Leaves clear space for the SVG ring around it */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid #cbd5e1;
+                border-radius: 50%;
+                background: #ffffff;
+                color: #0f172a;
+                cursor: pointer;
+                z-index: 1;
+                box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+              }
+
+                .refresh-toggle:hover {
+                  background: #f8fafc;
+                  border-color: #94a3b8;
+                  transform: scale(1.05);
+                  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+                }
+
+                .refresh-toggle:active {
+                  transform: scale(0.95);
+                }
+
+                /* Paused State Styles */
+                .refresh-toggle.paused {
+                  background: #f1f5f9;
+                  border-color: #94a3b8;
+                  color: #0f172a;
+                }
+
+                  .refresh-toggle.paused:hover {
+                    background: #e2e8f0;
+                    border-color: #64748b;
+                  }
+
+                .refresh-toggle svg {
+                  width: 45%;
+                  height: 45%;
+                  fill: currentColor;
+                }
+
+              .spinner {
+                animation: spin 1s linear infinite;
+                transform-origin: center;
+              }
+
+              @keyframes spin {
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+
+              /* Card Layout Frame */
+              .card-item {
+                position: relative;
+              }
+
+              .card-mobile-header {
+                display: none; /* Desktop default */
+              }
+
+              /* Circular Progress inside Countdown Cards */
+              .circular-progress-wrapper {
+                position: relative;
+                width: 80px;
+                height: 80px;
+                margin: 16px auto 8px auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .circular-progress-svg {
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg); /* Start from top */
+              }
+
+              .circle-bg {
+                fill: none;
+                stroke: #e2e8f0;
+                stroke-width: 7;
+              }
+
+              .circle-bar {
+                fill: none;
+                stroke: #3b82f6; /* Matching horizontal progress bar color */
+                stroke-width: 7;
+                stroke-linecap: round;
+                stroke-dasharray: 263.89; /* 2 * π * 42 */
+                transition: stroke-dashoffset 0.3s ease;
+              }
+
+              .circle-text {
+                position: absolute;
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: #0f172a;
+              }
+
+              /* Desktop Layout */
+              @media (min-width: 1024px) {
+                .cards-container {
+                  grid-template-columns: repeat(3, 1fr);
+                }
+
+                .header-card {
+                  grid-column: 1 / -1;
+                }
+              }
+
+              /* Mobile Only Adjustments */
+              @media (max-width: 767px) {
+                /* Hide top header button on mobile */
+                .header-card .timer-ring-container {
+                  display: none;
+                }
+
+                .card-item {
+                  background: #ffffff;
+                  border-radius: 16px;
+                  border: 1px solid #e2e8f0;
+                  padding-top: 10px;
+                  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+                }
+
+                /* Compact Header for each counter on Mobile */
+                .card-mobile-header {
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  padding: 0 16px 8px 16px;
+                  border-bottom: 1px dashed #f1f5f9;
+                }
+
+                  .card-mobile-header .card-title {
+                    font-size: 0.75rem;
+                    font-weight: 700;
+                    color: #475569;
+                    letter-spacing: 0.05em;
+                  }
+
+                  /* Proportional ultra-small size for mobile card headers */
+                  .card-mobile-header .timer-ring-container {
+                    width: 32px;
+                    height: 32px;
+                    margin-top: 0;
+                  }
+
+                  .card-mobile-header .refresh-toggle {
+                    inset: 3px;
+                    border-width: 1px;
+                  }
+              }
+            </style>
+          </head>
+          <body>
+
+            <div class="page">
+              <div class="cards-container">
+
+                <!-- MAIN HEADER CARD -->
+                <header class="header-card">
+
+                  <div class="header">
+                    <span class="eyebrow">COUNTDOWN</span>
+
+                    <h1>Countdown Dashboard</h1>
+
+                    <p>
+                      {{
+              pause
+                ? 'Automatic refresh is paused.'
+                : 'Progress metrics across active tracking endpoints.'
+                      }}
+                    </p>
+                  </div>
+
+                  <!-- CIRCULAR TIMER WRAPPER (Desktop only) -->
+                  <div class="timer-ring-container">
+
+                    <svg *ngIf="!pause && isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+                      <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+                      <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
+                    </svg>
+
+                    <svg *ngIf="pause || !isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+                      <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+                    </svg>
+
+                    <button type="button"
+                            class="refresh-toggle"
+                            [class.paused]="pause"
+                            (click)="togglePause()"
+                            [attr.aria-label]="pause ? 'Resume automatic refresh' : 'Pause automatic refresh'">
+
+                      <svg *ngIf="isLoading && !pause" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                      </svg>
+
+                      <svg *ngIf="pause" viewBox="0 0 24 24">
+                        <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+                      </svg>
+
+                      <svg *ngIf="!pause && !isLoading" viewBox="0 0 24 24">
+                        <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+                      </svg>
+
+                    </button>
+                  </div>
+
+                </header>
+
+                <!-- Reusable template for card top headers on mobile -->
+                <ng-template #cardHeader let-title="title">
+                  <div class="card-mobile-header">
+                    <span class="card-title">{{ title }}</span>
+
+                    <div class="timer-ring-container">
+                      <svg *ngIf="!pause && isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+                        <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+                        <circle class="timer-ring-progress" cx="29" cy="29" r="26" fill="none" />
+                      </svg>
+
+                      <svg *ngIf="pause || !isAnimating" class="timer-ring-svg" viewBox="0 0 58 58">
+                        <circle class="timer-ring-bg" cx="29" cy="29" r="26" fill="none" />
+                      </svg>
+
+                      <button type="button"
+                              class="refresh-toggle"
+                              [class.paused]="pause"
+                              (click)="togglePause()">
+
+                        <svg *ngIf="isLoading && !pause" class="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                          <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                        </svg>
+
+                        <svg *ngIf="pause" viewBox="0 0 24 24">
+                          <path d="M8 5.14v13.72a1 1 0 0 0 1.53.85l10.1-6.86a1 1 0 0 0 0-1.7L9.53 4.29A1 1 0 0 0 8 5.14Z" />
+                        </svg>
+
+                        <svg *ngIf="!pause && !isLoading" viewBox="0 0 24 24">
+                          <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <!-- COUNTER CARDS -->
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'TEST GENERIC API' }"></ng-container>
+                  <app-countdown [counterResult]="counterResult"
+                                 [counterName]="'TEST GENERIC API'"
+                                 [decimalPrecission]="5">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'PAYROLL API' }"></ng-container>
+                  <app-countdown [counterResult]="payrollResult"
+                                 [counterName]="'PAYROLL API'"
+                                 [decimalPrecission]="4">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'DAY API' }"></ng-container>
+                  <app-countdown [counterResult]="counterApiResult"
+                                 [counterName]="'DAY API'"
+                                 [decimalPrecission]="3">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'HOUR API' }"></ng-container>
+                  <app-countdown [counterResult]="hourResult"
+                                 [counterName]="'HOUR API'"
+                                 [decimalPrecission]="3">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WORK API' }"></ng-container>
+                  <app-countdown [counterResult]="workResult"
+                                 [counterName]="'WORK API'"
+                                 [decimalPrecission]="3">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WEEKEND API' }"></ng-container>
+                  <app-countdown [counterResult]="weekendResult"
+                                 [counterName]="'WEEKEND API'"
+                                 [decimalPrecission]="3">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'MONTH API' }"></ng-container>
+                  <app-countdown [counterResult]="monthResult"
+                                 [counterName]="'MONTH API'"
+                                 [decimalPrecission]="4">
+                  </app-countdown>
+                </div>
+
+                <div class="card-item">
+                  <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WHOLE YEAR API' }"></ng-container>
+                  <app-countdown [counterResult]="yearResult"
+                                 [counterName]="'WHOLE YEAR API'"
+                                 [decimalPrecission]="5">
+                  </app-countdown>
+                </div>
+
+              </div>
+            </div>
+          </body>
+        </html>
         </app-countdown>
       </div>
 
