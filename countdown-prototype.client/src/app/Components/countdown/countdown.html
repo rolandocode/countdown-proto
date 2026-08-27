@@ -31,11 +31,24 @@
     transition: stroke-dashoffset 0.3s ease;
   }
 
+  /* 12 Clock Ticks Overlay */
+  .circle-ticks {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: repeating-conic-gradient( from 0deg, #94a3b8 0deg 2deg, transparent 2deg 30deg );
+    /* Mask out center and outer edge to leave neat ticks over the ring path */
+    -webkit-mask: radial-gradient(farthest-side, transparent 69%, #000 70%, #000 81%, transparent 82%);
+    mask: radial-gradient(farthest-side, transparent 69%, #000 70%, #000 81%, transparent 82%);
+  }
+
   .circle-text {
     position: absolute;
     font-size: 0.85rem;
     font-weight: 700;
     color: #0f172a;
+    z-index: 1;
   }
 </style>
 
@@ -57,7 +70,7 @@
       </div>
     </div>
 
-    <!-- NEW: Circular Progress Ring -->
+    <!-- NEW: Circular Progress Ring with 12 Clock Ticks -->
     <div class="circular-progress-wrapper">
       <svg class="circular-progress-svg" viewBox="0 0 100 100">
         <!-- Background Track -->
@@ -69,6 +82,8 @@
                 r="42"
                 [style.strokeDashoffset]="263.89 - (263.89 * (counterResult.percentage || 0)) / 100" />
       </svg>
+      <!-- 12 Clock Marks -->
+      <div class="circle-ticks"></div>
       <div class="circle-text">
         <span>{{ counterResult.percentage?.toFixed(3) }}%</span>
       </div>
