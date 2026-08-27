@@ -468,6 +468,57 @@ namespace Countdown_prototype.Server.Controllers
         }
 
         [HttpGet]
+        [Route("logsInfo")]
+        public IActionResult GetLogsInfo()
+        {
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "requestLogs.csv");
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound("Log file does not exist.");
+            }
+
+            try
+            {
+                int lineCount;
+                double sizeInKB;
+
+                lock (_logLock)
+                {
+                    var fileInfo = new FileInfo(filePath);
+
+                    // Convert bytes to kilobytes
+                    sizeInKB = Math.Round(fileInfo.Length / 1024.0, 2);
+
+                    // Read line count safely with FileShare.ReadWrite enabled
+                    using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    using var reader = new StreamReader(stream);
+
+                    lineCount = 0;
+                    while (reader.ReadLine() != null)
+                    {
+                        lineCount++;
+                    }
+                }
+
+                return Ok(new
+                {
+                    lineCount = lineCount,
+                    sizeInKB = sizeInKB
+                });
+            }
+            catch (IOException ex)
+            {
+                return StatusCode(409, $"Cannot read log info because the file is locked: {ex.Message}");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return StatusCode(403, $"Permission denied: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet]
         [Route("clearLogs")]
         public IActionResult ClearLogs()
         {
