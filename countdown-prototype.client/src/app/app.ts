@@ -16,6 +16,7 @@ export interface CountdownResult {
   currentDate: string;
   percentage: number;
   countdownTime: string;
+  elapsedTime?: string;
 }
 
 @Component({

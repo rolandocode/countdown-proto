@@ -70,6 +70,26 @@ namespace Countdown_prototype.Server.Controllers
             return $"{days}d {hours}h {minutes}m {seconds}sec";
         }
 
+        private static string FormatElapsedTime(DateTime startDate, DateTime now)
+        {
+            TimeSpan elapsed = now - startDate;
+
+            if (elapsed <= TimeSpan.Zero)
+            {
+                return "0d 0h 0m 0sec";
+            }
+
+            // Floor ensures elapsed time accurately counts up completed seconds
+            int totalSeconds = (int)Math.Floor(elapsed.TotalSeconds);
+
+            int days = totalSeconds / 86400;
+            int hours = (totalSeconds % 86400) / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
+
+            return $"{days}d {hours}h {minutes}m {seconds}sec";
+        }
+
         [HttpGet]
         public object Get()
         {
@@ -107,7 +127,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -148,7 +169,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -201,7 +223,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -295,7 +318,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -337,7 +361,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -379,7 +404,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -420,7 +446,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
@@ -474,7 +501,8 @@ namespace Countdown_prototype.Server.Controllers
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
                 percentage = percentage,
-                countdownTime = FormatCountdownTime(now, endDate)
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
 
