@@ -10,6 +10,14 @@ interface WeatherForecast {
   summary: string;
 }
 
+export interface CountdownResult {
+  startDate: string;
+  endDate: string;
+  currentDate: string;
+  percentage: number;
+  countdownTime: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
@@ -18,14 +26,14 @@ interface WeatherForecast {
 })
 export class App implements OnInit, OnDestroy {
   public forecasts: WeatherForecast[] = [];
-  public counterResult: any = {};
-  public counterApiResult: any = {};
-  public workResult: any = {};
-  public weekendResult: any = {};
-  public yearResult: any = {};
-  public hourResult: any = {};
-  public monthResult: any = {};
-  public payrollResult: any = {};
+  public counterResult: Partial<CountdownResult> = {};
+  public counterApiResult: Partial<CountdownResult> = {};
+  public workResult: Partial<CountdownResult> = {};
+  public weekendResult: Partial<CountdownResult> = {};
+  public yearResult: Partial<CountdownResult> = {};
+  public hourResult: Partial<CountdownResult> = {};
+  public monthResult: Partial<CountdownResult> = {};
+  public payrollResult: Partial<CountdownResult> = {};
   public pause: boolean = false;
 
   // Controls when the timer ring is animated
@@ -83,14 +91,14 @@ export class App implements OnInit, OnDestroy {
 
   getPercentage() {
     forkJoin({
-      counter: this.http.get('/counter'),
-      counterApi: this.http.get('/counter/day'),
-      work: this.http.get('/counter/work'),
-      weekend: this.http.get('/counter/weekend'),
-      year: this.http.get('/counter/year'),
-      hour: this.http.get('/counter/hour'),
-      month: this.http.get('/counter/month'),
-      payroll: this.http.get('/counter/payroll')
+      counter: this.http.get<CountdownResult>('/counter'),
+      counterApi: this.http.get<CountdownResult>('/counter/day'),
+      work: this.http.get<CountdownResult>('/counter/work'),
+      weekend: this.http.get<CountdownResult>('/counter/weekend'),
+      year: this.http.get<CountdownResult>('/counter/year'),
+      hour: this.http.get<CountdownResult>('/counter/hour'),
+      month: this.http.get<CountdownResult>('/counter/month'),
+      payroll: this.http.get<CountdownResult>('/counter/payroll')
     })
       .pipe(
         finalize(() => {

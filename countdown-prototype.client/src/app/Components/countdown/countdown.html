@@ -50,6 +50,35 @@
     color: #0f172a;
     z-index: 1;
   }
+
+  /* Styled Countdown Pill Badge */
+  .countdown-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 8px 0;
+    padding: 6px 14px;
+    background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+    color: #6b21a8;
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    border-radius: 9999px;
+    border: 1px solid #d8b4fe;
+    box-shadow: 0 2px 6px -1px rgba(139, 92, 246, 0.15), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+    .countdown-badge .timer-icon {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 </style>
 
 <!-- CARD 1: COUNTER DAY -->
@@ -70,7 +99,7 @@
       </div>
     </div>
 
-    <!-- NEW: Circular Progress Ring with 12 Clock Ticks -->
+    <!-- Circular Progress Ring with 12 Clock Ticks -->
     <div class="circular-progress-wrapper">
       <svg class="circular-progress-svg" viewBox="0 0 100 100">
         <!-- Background Track -->
@@ -109,6 +138,16 @@
       <div class="date">
         <span class="label">END</span>
         <span class="value">{{ counterResult.endDate }}</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="countdown-badge">
+        <svg class="timer-icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <polyline points="12 7 12 12 15 15" />
+        </svg>
+        <span>{{ counterResult.countdownTime }} left</span>
       </div>
     </div>
 

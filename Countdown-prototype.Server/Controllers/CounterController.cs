@@ -50,6 +50,26 @@ namespace Countdown_prototype.Server.Controllers
             }
         }
 
+        private static string FormatCountdownTime(DateTime now, DateTime endDate)
+        {
+            TimeSpan remaining = endDate - now;
+
+            if (remaining <= TimeSpan.Zero)
+            {
+                return "0d 0h 0m 0sec";
+            }
+
+            // Ceiling prevents missing second due to decimal truncation of milliseconds
+            int totalSeconds = (int)Math.Ceiling(remaining.TotalSeconds);
+
+            int days = totalSeconds / 86400;
+            int hours = (totalSeconds % 86400) / 3600;
+            int minutes = (totalSeconds % 3600) / 60;
+            int seconds = totalSeconds % 60;
+
+            return $"{days}d {hours}h {minutes}m {seconds}sec";
+        }
+
         [HttpGet]
         public object Get()
         {
@@ -86,7 +106,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -103,7 +124,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
@@ -126,7 +147,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -143,7 +165,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, 7, 0, 0);
@@ -178,7 +200,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -195,7 +218,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
             //TEST FOR SATURDAY
             // var now = TimeZoneInfo.ConvertTimeFromUtc(
@@ -271,7 +294,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -288,7 +312,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
 
             var startDate = new DateTime(now.Year, 1, 1, 0, 0, 0);
@@ -312,7 +336,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -329,7 +354,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
@@ -353,7 +378,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -370,7 +396,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
 
             var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
@@ -393,7 +419,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
@@ -411,7 +438,7 @@ namespace Countdown_prototype.Server.Controllers
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-           ).AddHours(-1);
+            ).AddHours(-1);
 
             var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
             var endDate = startDate.AddMonths(1);
@@ -446,7 +473,8 @@ namespace Countdown_prototype.Server.Controllers
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
                 currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
-                percentage = percentage
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate)
             };
         }
 
