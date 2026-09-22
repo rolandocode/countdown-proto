@@ -35,6 +35,9 @@ export class App implements OnInit, OnDestroy {
   public hourResult: Partial<CountdownResult> = {};
   public monthResult: Partial<CountdownResult> = {};
   public payrollResult: Partial<CountdownResult> = {};
+  public cancunResult: Partial<CountdownResult> = {};
+  public wholeWeekResult: Partial<CountdownResult> = {};
+
   public pause: boolean = false;
 
   // Controls when the timer ring is animated
@@ -99,7 +102,9 @@ export class App implements OnInit, OnDestroy {
       year: this.http.get<CountdownResult>('/counter/year'),
       hour: this.http.get<CountdownResult>('/counter/hour'),
       month: this.http.get<CountdownResult>('/counter/month'),
-      payroll: this.http.get<CountdownResult>('/counter/payroll')
+      payroll: this.http.get<CountdownResult>('/counter/payroll'),
+      cancun: this.http.get<CountdownResult>('/counter/cancun'),
+      wholeWeek: this.http.get<CountdownResult>('/counter/wholeweek')
     })
       .pipe(
         finalize(() => {
@@ -116,6 +121,8 @@ export class App implements OnInit, OnDestroy {
           this.hourResult = result.hour;
           this.monthResult = result.month;
           this.payrollResult = result.payroll;
+          this.cancunResult = result.cancun;
+          this.wholeWeekResult = result.wholeWeek;
 
           // Start 10s ring animation and timer cycle ONLY after server responds
           if (!this.pause) {

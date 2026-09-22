@@ -507,6 +507,89 @@ namespace Countdown_prototype.Server.Controllers
         }
 
         [HttpGet]
+        [Route("cancun")]
+        public object GetCancun()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                mexicoTimeZone
+            ).AddHours(-1);
+
+            var startDate = new DateTime(2026, 9, 27, 22, 0, 0, DateTimeKind.Unspecified);
+            var endDate = new DateTime(2026, 10, 4, 10, 0, 0, DateTimeKind.Unspecified);
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage = elapsed.TotalMilliseconds / totalDuration.TotalMilliseconds * 100;
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            WriteLog("Get Cancun Request", now);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
+            };
+        }
+
+
+        [HttpGet]
+        [Route("wholeWeek")]
+        public object GetWholeWeek()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                mexicoTimeZone
+            ).AddHours(-1);
+
+            //var now = new DateTime(2026, 9, 28);
+
+            var currentDayOfWeek = now.DayOfWeek;
+
+            var startMonday = currentDayOfWeek - DayOfWeek.Monday;
+            var endFriday = DayOfWeek.Friday - currentDayOfWeek;
+
+            var startDate = new DateTime(now.AddDays(-startMonday).Year, now.AddDays(-startMonday).Month, now.AddDays(-startMonday).Day, 7, 0, 0);
+            var endDate = new DateTime(now.AddDays(endFriday).Year, now.AddDays(endFriday).Month, now.AddDays(endFriday).Day, 17, 0, 0);
+
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage = elapsed.TotalMilliseconds / totalDuration.TotalMilliseconds * 100;
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            WriteLog("Get Whole Week Request", now);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
+            };
+        }
+
+        [HttpGet]
         [Route("logs")]
         public IActionResult GetLogs()
         {
