@@ -151,14 +151,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
@@ -193,14 +193,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, 7, 0, 0);
@@ -247,14 +247,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
             //TEST FOR SATURDAY
             // var now = TimeZoneInfo.ConvertTimeFromUtc(
@@ -342,14 +342,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
 
             var startDate = new DateTime(now.Year, 1, 1, 0, 0, 0);
@@ -385,14 +385,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
 
             var startDate = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0);
@@ -428,14 +428,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
 
             var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
@@ -471,14 +471,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                DateTime.UtcNow,
                mexicoTimeZone
-            ).AddHours(-1);
+            );
 
             var startDate = new DateTime(now.Year, now.Month, 1, 0, 0, 0);
             var endDate = startDate.AddMonths(1);
@@ -525,14 +525,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow,
                 mexicoTimeZone
-            ).AddHours(-1);
+            );
 
             var startDate = new DateTime(2026, 9, 27, 22, 0, 0, DateTimeKind.Unspecified);
             var endDate = new DateTime(2026, 10, 4, 10, 0, 0, DateTimeKind.Unspecified);
@@ -562,14 +562,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow,
                 mexicoTimeZone
-            ).AddHours(-1);
+            );
 
             var startDate = new DateTime(2026, 9, 25, 17, 0, 0, DateTimeKind.Unspecified);
             var endDate = new DateTime(2026, 10, 5, 8, 0, 0, DateTimeKind.Unspecified);
@@ -600,14 +600,14 @@ namespace Countdown_prototype.Server.Controllers
         {
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow,
                 mexicoTimeZone
-            ).AddHours(-1);
+            );
 
             //var now = new DateTime(2026, 9, 28);
 
