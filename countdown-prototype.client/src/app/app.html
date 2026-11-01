@@ -322,7 +322,7 @@
               </svg>
 
               <svg *ngIf="!pause && !isLoading" viewBox="0 0 24 24">
-                <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
+                <path d="M7 5a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Zm10 0a2 2 0 0 1 2 2v10a2 2 0 1 1-4 0V7a2 2 0 0 1 2-2Z" />
               </svg>
             </button>
           </div>
@@ -335,10 +335,28 @@
         <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'TEST GENERIC API' }"></ng-container>
         <app-countdown [counterResult]="counterResult"
                        [counterName]="'TEST GENERIC API'"
-                       [decimalPrecission]="5">
+                       [decimalPrecission]="6">
         </app-countdown>
       </div>
 
+      <!-- 2nd Card -->
+      <!--<div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'CANCUN API' }"></ng-container>
+        <app-countdown [counterResult]="cancunResult"
+                       [counterName]="'CANCUN API'"
+                       [decimalPrecission]="4">
+        </app-countdown>
+      </div>-->
+
+
+      <!-- 2nd Card -->
+      <!--<div class="card-item">
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'PTO API' }"></ng-container>
+        <app-countdown [counterResult]="fullPTOResult"
+                       [counterName]="'PTO API'"
+                       [decimalPrecission]="4">
+        </app-countdown>
+      </div>-->
 
       <!-- 2nd Card -->
       <div class="card-item">
@@ -350,18 +368,11 @@
       </div>
 
 
-      <!-- 2nd Card -->
-      <div class="card-item">
-        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'CANCUN API' }"></ng-container>
-        <app-countdown [counterResult]="cancunResult"
-                       [counterName]="'CANCUN API'"
-                       [decimalPrecission]="4">
-        </app-countdown>
-      </div>
+
 
       <!-- 6th Card -->
       <div class="card-item">
-        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'WORK API' }"></ng-container>
+        <ng-container *ngTemplateOutlet="cardHeader; context: { title: 'DAY WORK API' }"></ng-container>
         <app-countdown [counterResult]="workResult"
                        [counterName]="'WORK API'"
                        [decimalPrecission]="3">

@@ -543,6 +543,43 @@ namespace Countdown_prototype.Server.Controllers
             };
         }
 
+        [HttpGet]
+        [Route("fullPTO")]
+        public object GetFullPTO()
+        {
+            var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
+                OperatingSystem.IsWindows()
+                    ? "Central Standard Time"
+                    : "America/Monterrey"
+            );
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(
+                DateTime.UtcNow,
+                mexicoTimeZone
+            ).AddHours(-1);
+
+            var startDate = new DateTime(2026, 9, 25, 17, 0, 0, DateTimeKind.Unspecified);
+            var endDate = new DateTime(2026, 10, 5, 8, 0, 0, DateTimeKind.Unspecified);
+
+            var totalDuration = endDate - startDate;
+            var elapsed = now - startDate;
+
+            var percentage = elapsed.TotalMilliseconds / totalDuration.TotalMilliseconds * 100;
+            percentage = Math.Clamp(percentage, 0, 100);
+
+            WriteLog("Get Cancun Request", now);
+
+            return new
+            {
+                startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                currentDate = now.ToString("yyyy-MM-dd HH:mm:ss"),
+                percentage = percentage,
+                countdownTime = FormatCountdownTime(now, endDate),
+                elapsedTime = FormatElapsedTime(startDate, now)
+            };
+        }
+
 
         [HttpGet]
         [Route("wholeWeek")]
