@@ -90,37 +90,49 @@ namespace Countdown_prototype.Server.Controllers
             return $"{days}d {hours}h {minutes}m {seconds}sec";
         }
 
+
         [HttpGet]
         public object Get()
         {
+            // Monterrey, Mexico (UTC-6, no Daylight Saving Time)
             var mexicoTimeZone = TimeZoneInfo.FindSystemTimeZoneById(
                 OperatingSystem.IsWindows()
-                    ? "Central Standard Time"
+                    ? "Central Standard Time (Mexico)"
                     : "America/Monterrey"
             );
 
+            // Start date in Monterrey local time
             var startDate = new DateTime(
                 2026, 8, 10, 18, 0, 0,
                 DateTimeKind.Unspecified
             );
 
+            // End date (9 months after start)
             var endDate = startDate.AddMonths(9);
 
+            // Current Monterrey local time
+            // No manual hour adjustments needed
             var now = TimeZoneInfo.ConvertTimeFromUtc(
                 DateTime.UtcNow,
                 mexicoTimeZone
-            ).AddHours(-1);
+            );
 
+            // Calculate duration and elapsed time
             var totalDuration = endDate - startDate;
             var elapsed = now - startDate;
 
+            // Calculate completion percentage
             var percentage =
                 elapsed.TotalMilliseconds /
                 totalDuration.TotalMilliseconds * 100;
 
+            // Keep percentage between 0 and 100
             percentage = Math.Clamp(percentage, 0, 100);
 
+            // Log request
             WriteLog("Get Generic Request", now);
+
+            // Return response
             return new
             {
                 startDate = startDate.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -131,6 +143,7 @@ namespace Countdown_prototype.Server.Controllers
                 elapsedTime = FormatElapsedTime(startDate, now)
             };
         }
+
 
         [HttpGet]
         [Route("day")]
